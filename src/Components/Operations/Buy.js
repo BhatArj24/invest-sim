@@ -72,8 +72,7 @@ const Buy = () => {
                 myStocks: user.myStocks
             });
         }
-        window.location.href = "/dashboard";
-
+        // window.location.href = "/dashboard";
     }
     const getStock = async (ticker) => {
         const options = {

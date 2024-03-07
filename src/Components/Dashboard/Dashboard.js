@@ -207,7 +207,7 @@ const Dashboard = () => {
                     </button>
                     <div style={{marginLeft:"800px"}} className="mt-1">
                         <button className="font-semibold">
-                            Buying Power: ${user.balance}
+                            Buying Power: ${user.balance.toFixed(2)}
                         </button>
                     </div>
                 </div>
