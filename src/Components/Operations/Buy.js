@@ -9,7 +9,7 @@ import axios from "axios";
 
 const Buy = () => {
     const { ticker } = useParams();
-    const [stock, setStock] = useState({price:0, name:""});
+    const [stock, setStock] = useState({price:0, name:"",ticker:""});
     const [amount, setAmount] = useState(0);
     const [user, setUser] = useState({email:"",username:"",myStocks:[],balance:0,operations:[],invested:0});
     const userCollectionRef = collection(db,"users");
@@ -47,7 +47,7 @@ const Buy = () => {
         const newOperation = {date: new Date().toLocaleString(), ticker: ticker, price: stock.price, shares: amount, type: "buy"};
         const newStock = {ticker: ticker, price: [stock.price], shares: [amount]};
         if (!hasStock) {
-  
+            console.log("no stock")
             await updateDoc(doc(db, "users", user.email), {
                 balance: newBalance,
                 invested: newInvested,
@@ -57,14 +57,14 @@ const Buy = () => {
         } else{
 
             user.myStocks.forEach((s) => {
+                console.log(s.ticker, stock.name)
                 if (s.ticker === stock.ticker) {
 
                     s.shares = [...s.shares, amount];
                     s.price = [...s.price, stock.price];
-                    console.log(s.shares);
-                    console.log(s.price);
                 }
             });
+            console.log(user);
             await updateDoc(doc(db, "users", user.email), {
                 balance: newBalance,
                 invested: newInvested,
@@ -72,7 +72,7 @@ const Buy = () => {
                 myStocks: user.myStocks
             });
         }
-        // window.location.href = "/dashboard";
+        window.location.href = "/dashboard";
     }
     const getStock = async (ticker) => {
         const options = {
@@ -86,7 +86,7 @@ const Buy = () => {
         
         try {
           const response = await axios.request(options);
-          setStock({...stock, price: response.data.regularMarketPrice.raw, name: response.data.displayName});
+          setStock({...stock, price: response.data.regularMarketPrice.raw, name: response.data.displayName, ticker: response.data.symbol});
         } catch (error) {
           console.error(error);
         }
