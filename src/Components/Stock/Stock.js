@@ -19,12 +19,7 @@ const Stock = () => {
     ticker: ticker,
     price: 0.0,
     change: 0.0,
-    changePercent: 0.0,
-    high: 0.0,
-    low: 0.0,
-    open: 0.0,
-    previousClose: 0.0,
-    volume: 0.0,
+    changePercent: 0.0
   });
   const [selectTime, setSelectTime] = useState("1D");
   const getProfile = async () =>{
@@ -65,7 +60,7 @@ const Stock = () => {
     
     try {
       const response = await axios.request(options);
-      setStock({...stock, name:response.data.displayName, price: response.data.regularMarketPrice.raw, change: response.data.regularMarketChange.raw, changePercent: response.data.regularMarketChangePercent.raw, high: response.data.regularMarketDayHigh.raw, low: response.data.regularMarketDayLow.raw, open: response.data.regularMarketOpen.raw, previousClose: response.data.regularMarketPreviousClose.raw, volume: response.data.regularMarketVolume.raw});
+      setStock({...stock, name:response.data.displayName, price: response.data.regularMarketPrice.raw, change: response.data.regularMarketChange.raw, changePercent: response.data.regularMarketChangePercent.raw});
     } catch (error) {
       console.error(error);
     }
