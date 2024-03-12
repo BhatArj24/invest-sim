@@ -8,19 +8,14 @@ import NavBar from "../NavBar.js";
 import graph from "../../Images/graph.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import Stock from "../../Classes/Stock.js";
 
-const Stock = () => {
+const StockPage = () => {
   const { ticker } = useParams();
   const [user, setUser] = useState({email:"",username:"",myStocks:[],balance:0,operations:[],invested:0});
   const userCollectionRef = collection(db,"users");
 
-  const [stock, setStock] = useState({
-    name: "",
-    ticker: ticker,
-    price: 0.0,
-    change: 0.0,
-    changePercent: 0.0
-  });
+  const [stock, setStock] = useState(new Stock("", "", 0.0, 0.0, 0.0));
   const [selectTime, setSelectTime] = useState("1D");
   const getProfile = async () =>{
     const email = sessionStorage.getItem("email");
@@ -60,7 +55,14 @@ const Stock = () => {
     
     try {
       const response = await axios.request(options);
-      setStock({...stock, name:response.data.displayName, price: response.data.regularMarketPrice.raw, change: response.data.regularMarketChange.raw, changePercent: response.data.regularMarketChangePercent.raw});
+      setStock(prevStock => ({
+        ...prevStock,
+        ticker: ticker,
+        name: response.data.displayName,
+        price: response.data.regularMarketPrice.raw,
+        change: response.data.regularMarketChange.raw,
+        changePercent: response.data.regularMarketChangePercent.raw
+      }));
     } catch (error) {
       console.error(error);
     }
@@ -285,4 +287,4 @@ const Stock = () => {
   );
 };
 
-export default Stock;
+export default StockPage;

@@ -4,7 +4,7 @@ import Home from './Components/Home/Home.js';
 import Dashboard from './Components/Dashboard/Dashboard.js';
 import Login from './Components/Login/Login.js';
 import Register from './Components/Register/Register.js';
-import Stock from './Components/Stock/Stock.js';
+import StockPage from './Components/StockPage/StockPage.js';
 import Profile from './Components/Profile.js/Profile.js';
 import Buy from './Components/Operations/Buy.js';
 import Sell from './Components/Operations/Sell.js';
@@ -19,7 +19,7 @@ function App() {
             <Route path='/dashboard' element={<Dashboard/>} />
             <Route path='/login' element={<Login/>} />
             <Route path='/register' element={<Register/>} />
-            <Route path='/stock/:ticker' element={<Stock/>} />
+            <Route path='/stock/:ticker' element={<StockPage/>} />
             <Route path='/profile' element={<Profile/>} />
             <Route path='/buy/:ticker' element={<Buy/>} />
             <Route path='/sell/:ticker' element={<Sell/>} />
