@@ -52,6 +52,7 @@ const Sell = () => {
         for (let i = 0; i < shares.length; i++) {
             totalShares += shares[i];
         }
+        console.log(totalShares);
         return totalShares;
     }
     const handleSell = async () => {
@@ -59,9 +60,33 @@ const Sell = () => {
             alert("You don't have enough shares to sell");
             return;
         }
-        
-        // calculate return update user data
+        let totalReturn = 0;
+        user.myStocks.forEach((s) => {
+            if (s.ticker === ticker) {
+                for(let i=0;i<s.shares.length;i++){
+                    if(s.shares[i] >= amount){
+                        s.shares[i] -= amount;
+                        totalReturn += amount * s.price[i];
+                        break;
+                    }else{
+                        setAmount(amount - s.shares[i]);
+                        s.shares[i] = 0;
+                        totalReturn += s.shares[i] * s.price[i];
+                    }
+                }
+            }
+        });
         const newOperation = new Operation(new Date().toLocaleString(), ticker, stock.price, amount, "sell");
+        const newBalance = user.balance + totalReturn;
+        const newInvested = user.invested - totalReturn;
+        const op = {date: newOperation.date, ticker: newOperation.ticker, price: newOperation.price, shares: newOperation.shares, type: newOperation.type};
+        await updateDoc(doc(db, "users", user.email), {
+            balance: newBalance,
+            invested: newInvested,
+            operations: arrayUnion(op),
+            myStocks: user.myStocks
+        });
+        window.location.href = "/dashboard";
     }
 
     useEffect(() => {
@@ -73,6 +98,7 @@ const Sell = () => {
             if(user.email !== ""){
                 user.myStocks.forEach((s) => {
                     if (s.ticker === ticker) {
+                        console.log("");
                         setTotalShares(totalSharesCalculation(s.shares));
                     }
                 });
@@ -125,7 +151,7 @@ const Sell = () => {
 
                     <div className="flex pt-8 px-10">
                         <h1 className="text-xl">Total: <span className="text-green-600">${total.toFixed(2)}</span></h1>
-                        <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-10 rounded" style={{marginLeft:"50%"}} onClick={handleSell}>Buy</button>
+                        <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-10 rounded" style={{marginLeft:"50%"}} onClick={handleSell}>Sell</button>
 
                     </div>
                 </div>
