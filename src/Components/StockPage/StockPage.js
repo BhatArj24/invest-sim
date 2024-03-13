@@ -9,6 +9,7 @@ import graph from "../../Images/graph.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Stock from "../../Classes/Stock.js";
+import StockGraph from "./StockGraph.js";
 
 const StockPage = () => {
   const { ticker } = useParams();
@@ -16,7 +17,7 @@ const StockPage = () => {
   const userCollectionRef = collection(db,"users");
 
   const [stock, setStock] = useState(new Stock("", "", 0.0, 0.0, 0.0));
-  const [selectTime, setSelectTime] = useState("1D");
+  const [selectTime, setSelectTime] = useState("1d");
   const getProfile = async () =>{
     const email = sessionStorage.getItem("email");
     const data = await getDocs(userCollectionRef);
@@ -123,20 +124,29 @@ const StockPage = () => {
           <h1 className="text-lg font-bold px-40 text-green-600">△ ${stock.change.toFixed(2)} ({(stock.changePercent).toFixed(3)}%)</h1>
         }
 
-        <img src={graph} className="w-3/4 m-auto"></img>
+        {/* <img src={graph} className="w-3/4 m-auto"></img> */}
+        {
+          user.email !== "" ? 
+          <StockGraph stockData={{ticker:stock.ticker, change: stock.change, range:selectTime }}/>
+          :
+          <div className="w-3/4 m-auto h-96 bg-white"></div>
+
+          
+        }
+
 
         <div className="flex m-auto gap-6 w-3/4 mt-6">
           <button
             className={`rounded-lg ${
-              selectTime === "1D"
+              selectTime === "1d"
                 ? "bg-white border-2 border-black"
                 : "bg-black"
             }`}
-            onClick={() => setSelectTime("1D")}
+            onClick={() => setSelectTime("1d")}
           >
             <p
               className={`font-semibold p-1.5 ${
-                selectTime !== "1D" ? "text-white " : "text-black "
+                selectTime !== "1d" ? "text-white " : "text-black "
               }`}
             >
               1D
@@ -144,15 +154,15 @@ const StockPage = () => {
           </button>
           <button
             className={`rounded-lg ${
-              selectTime === "1W"
+              selectTime === "1wk"
                 ? "bg-white border-2 border-black"
                 : "bg-black"
             }`}
-            onClick={() => setSelectTime("1W")}
+            onClick={() => setSelectTime("1wk")}
           >
             <p
               className={`font-semibold p-1.5 ${
-                selectTime !== "1W" ? "text-white " : "text-black "
+                selectTime !== "1wk" ? "text-white " : "text-black "
               }`}
             >
               1W
@@ -160,16 +170,16 @@ const StockPage = () => {
           </button>
           <button
             className={`rounded-lg ${
-              selectTime === "1M"
+              selectTime === "1mo"
                 ? "bg-white border-2 border-black"
                 : "bg-black"
             }`}
-            onClick={() => setSelectTime("1M")
+            onClick={() => setSelectTime("1mo")
           }
           >
             <p
               className={`font-semibold p-1.5 ${
-                selectTime !== "1M" ? "text-white " : "text-black "
+                selectTime !== "1mo" ? "text-white " : "text-black "
               }`}
             >
               1M
@@ -177,15 +187,15 @@ const StockPage = () => {
           </button>
           <button
             className={`rounded-lg ${
-              selectTime === "3M"
+              selectTime === "3mo"
                 ? "bg-white border-2 border-black"
                 : "bg-black"
             }`}
-            onClick={() => setSelectTime("3M")}
+            onClick={() => setSelectTime("3mo")}
           >
             <p
               className={`font-semibold p-1.5 ${
-                selectTime !== "3M" ? "text-white " : "text-black "
+                selectTime !== "3mo" ? "text-white " : "text-black "
               }`}
             >
               3M
@@ -193,15 +203,15 @@ const StockPage = () => {
           </button>
           <button
             className={`rounded-lg ${
-              selectTime === "1Y"
+              selectTime === "1yr"
                 ? "bg-white border-2 border-black"
                 : "bg-black"
             }`}
-            onClick={() => setSelectTime("1Y")}
+            onClick={() => setSelectTime("1yr")}
           >
             <p
               className={`font-semibold p-1.5 ${
-                selectTime !== "1Y" ? "text-white " : "text-black "
+                selectTime !== "1yr" ? "text-white " : "text-black "
               }`}
             >
               1Y
@@ -209,21 +219,21 @@ const StockPage = () => {
           </button>
           <button
             className={`rounded-lg ${
-              selectTime === "5Y"
+              selectTime === "5yr"
                 ? "bg-white border-2 border-black"
                 : "bg-black"
             }`}
-            onClick={() => setSelectTime("5Y")}
+            onClick={() => setSelectTime("5yr")}
           >
             <p
               className={`font-semibold p-1.5 ${
-                selectTime !== "5Y" ? "text-white " : "text-black "
+                selectTime !== "5yr" ? "text-white " : "text-black "
               }`}
             >
               5Y
             </p>
           </button>
-          <button
+          {/* <button
             className={`rounded-lg ${
               selectTime === "All"
                 ? "bg-white border-2 border-black"
@@ -238,7 +248,7 @@ const StockPage = () => {
             >
               All
             </p>
-          </button>
+          </button> */}
         </div>
 
         <h1 className="text-3xl font-bold px-40 mt-10">Your Position</h1>
@@ -252,7 +262,7 @@ const StockPage = () => {
                   </div>
                   <div>
                     <h1 className="text-md text-slate-600">Market Value</h1>
-                    <h1 className="text-md font-bold">${totalSharesCalculation(user.myStocks).toFixed(2)*stock.price}</h1>
+                    <h1 className="text-md font-bold">${(totalSharesCalculation(user.myStocks).toFixed(2)*stock.price).toFixed(2)}</h1>
                   </div>
                 </div>
                 <div className="flex py-4">
