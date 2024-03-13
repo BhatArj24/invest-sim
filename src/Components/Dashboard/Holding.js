@@ -32,7 +32,7 @@ const Holding = ({ data }) => {
                 </div>
             </div>
             <div>
-                <p className="text-slate-600 text-sm">{data.shares} Shares</p>
+                <p className="text-slate-600 text-sm">{data.shares.toFixed(2)} Shares</p>
             </div>
             <div className="text-slate-500 mb-4">
                 ______________________

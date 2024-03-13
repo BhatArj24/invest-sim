@@ -4,6 +4,7 @@ import NavBar from "../NavBar.js";
 import {collection, getDocs, updateDoc, doc, arrayUnion} from "firebase/firestore";
 import {db} from "../../firebase-config.js";
 import axios from "axios";
+import Operation from "../../Classes/Operation.js";
 
 
 
@@ -44,7 +45,7 @@ const Buy = () => {
 
         const newBalance = user.balance - total;
         const newInvested = user.invested + total;
-        const newOperation = {date: new Date().toLocaleString(), ticker: ticker, price: stock.price, shares: amount, type: "buy"};
+        const newOperation = new Operation(new Date().toLocaleString(), ticker, stock.price, amount, "buy");
         const newStock = {ticker: ticker, price: [stock.price], shares: [amount]};
         if (!hasStock) {
             console.log("no stock")
@@ -64,11 +65,11 @@ const Buy = () => {
                     s.price = [...s.price, stock.price];
                 }
             });
-            console.log(user);
+            const op = {date: newOperation.date, ticker: newOperation.ticker, price: newOperation.price, shares: newOperation.shares, type: newOperation.type};
             await updateDoc(doc(db, "users", user.email), {
                 balance: newBalance,
                 invested: newInvested,
-                operations: arrayUnion(newOperation),
+                operations: arrayUnion(op),
                 myStocks: user.myStocks
             });
         }
@@ -146,7 +147,7 @@ const Buy = () => {
                     </div>
 
                     <div className="flex pt-10 px-10">
-                        <h1 className="text-xl">Total: <span className="text-green-600">${total}</span></h1>
+                        <h1 className="text-xl">Total: <span className="text-green-600">${total.toFixed(2)}</span></h1>
                         <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-10 rounded" style={{marginLeft:"50%"}} onClick={handleBuy}>Buy</button>
 
                     </div>

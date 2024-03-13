@@ -1,8 +1,10 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { useParams } from "react-router-dom";
 import NavBar from "../NavBar.js";
 import {collection, getDocs, updateDoc, doc, arrayUnion} from "firebase/firestore";
 import {db} from "../../firebase-config.js";
+import axios from "axios";
+import Operation from "../../Classes/Operation.js";
 
 const Sell = () => {
     const { ticker } = useParams();
@@ -11,6 +13,7 @@ const Sell = () => {
     const [user, setUser] = useState({email:"",username:"",myStocks:[],balance:0,operations:[],invested:0});
     const userCollectionRef = collection(db,"users");
     const [total, setTotal] = useState(0);
+    const [totalShares, setTotalShares] = useState(0);
     const getProfile = async () =>{
         const email = sessionStorage.getItem("email");
         const data = await getDocs(userCollectionRef);
@@ -27,15 +30,60 @@ const Sell = () => {
             }
         });
     }
-
-    const handleSell = async () => {
-        console.log("sell");
+    const getStock = async (ticker) => {
+        const options = {
+          method: 'GET',
+          url: `https://yahoo-finance127.p.rapidapi.com/price/${ticker}`,
+          headers: {
+            'X-RapidAPI-Key': '6cf0a9ba48msh6e1a173c2609062p127452jsn5455a7849ff8',
+            'X-RapidAPI-Host': 'yahoo-finance127.p.rapidapi.com'
+          }
+        };
+        
+        try {
+          const response = await axios.request(options);
+          setStock({...stock, price: response.data.regularMarketPrice.raw, name: response.data.displayName, ticker: response.data.symbol});
+        } catch (error) {
+          console.error(error);
+        }
     }
+    const totalSharesCalculation = (shares) => {
+        let totalShares = 0;
+        for (let i = 0; i < shares.length; i++) {
+            totalShares += shares[i];
+        }
+        return totalShares;
+    }
+    const handleSell = async () => {
+        if(totalShares - amount < 0){
+            alert("You don't have enough shares to sell");
+            return;
+        }
+        
+        // calculate return update user data
+        const newOperation = new Operation(new Date().toLocaleString(), ticker, stock.price, amount, "sell");
+    }
+
+    useEffect(() => {
+        if (!sessionStorage.getItem("email")) {
+            window.location.href = "/login";
+        } else {
+            getProfile();
+            getStock(ticker);
+            if(user.email !== ""){
+                user.myStocks.forEach((s) => {
+                    if (s.ticker === ticker) {
+                        setTotalShares(totalSharesCalculation(s.shares));
+                    }
+                });
+            }
+        }
+    }, []);
     return (
         <section className="gray-bg">
             <NavBar />
             <div className="white-bg" style={{ width: "100%", height: "800px", marginTop: "0%" }}>
-            <div className="bg-white border-2 border-black w-1/3 m-auto rounded-lg" style={{height:"325px"}}>
+            <div className="bg-white border-2 border-black w-1/3 m-auto rounded-lg" style={{height:"350px"}}>
                     <div className="flex">
                         <div>
                             <h1 className="text-4xl font-bold px-10 pt-8">Operation</h1>
@@ -68,15 +116,15 @@ const Sell = () => {
 
 
                         </div>
-                        <div className="flex">
-                            <h1 className={`text-xl ${user.balance - total < 0 ? 'text-red-500' : ''}`}>
-                                Buying Power: ${(user.balance - total).toFixed(2)}
+                        <div className="flex pt-3">
+                            <h1 className="text-xl" >
+                                Shares Left: <span className={`text-xl ${totalShares - amount < 0 ? 'text-red-500' : ''}`}>{(totalShares - amount).toFixed(2)}</span>
                             </h1>
                         </div>
                     </div>
 
-                    <div className="flex pt-10 px-10">
-                        <h1 className="text-xl">Total: <span className="text-green-600">${total}</span></h1>
+                    <div className="flex pt-8 px-10">
+                        <h1 className="text-xl">Total: <span className="text-green-600">${total.toFixed(2)}</span></h1>
                         <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-10 rounded" style={{marginLeft:"50%"}} onClick={handleSell}>Buy</button>
 
                     </div>
