@@ -8,6 +8,7 @@ import StockPage from './Components/StockPage/StockPage.js';
 import Profile from './Components/Profile.js/Profile.js';
 import Buy from './Components/Operations/Buy.js';
 import Sell from './Components/Operations/Sell.js';
+import BuyingPower from './Components/Dashboard/BuyingPower.js';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path='/profile' element={<Profile/>} />
             <Route path='/buy/:ticker' element={<Buy/>} />
             <Route path='/sell/:ticker' element={<Sell/>} />
+            <Route path='/buying-power' element={<BuyingPower/>} />
 
           </Routes>
         </div>

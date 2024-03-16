@@ -5,13 +5,30 @@ import { auth } from "../../firebase-config.js";
 import { useNavigate } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase-config.js";
-import {useQueueState} from "rooks";
+import useStack from "./Stack.js";
+import Transaction from "./Transaction.js";
 
 const Profile = () => {
     const navigate = useNavigate();
     const userCollectionRef = collection(db,"users");
     const [user, setUser] = useState({email:"",username:"",myStocks:[],balance:0,operations:[],invested:0});
-    const [transactions, {enqueue}] = useQueueState([]);
+    const {pushToStack, popFromStack, peekStack, isEmpty, clearStack} = useStack();
+    const [createStack, setCreateStack] = useState(false);
+    const [poppedItems, setPoppedItems] = useState([]);
+
+    const setTransactions = ()=>{
+        if(!isEmpty()){
+            clearStack();
+        }
+        const operations = user.operations;
+        operations.forEach(operation => {
+            pushToStack(operation);
+            console.log(peekStack());
+        });
+        while(!isEmpty()){
+            setPoppedItems([...poppedItems,popFromStack()]);
+        }
+    }
 
     const getProfile = async () =>{
         const email = sessionStorage.getItem("email");
@@ -28,38 +45,23 @@ const Profile = () => {
                 });
             }
         });
+        if(user.operations.length > 0 && !createStack){
+            setCreateStack(true);
+            setTransactions();
+        }
     }
-    const setTransactions = () => {
-        // reset the queue
-        transactions.splice(0,transactions.length);
-        const operations = user.operations;
-        operations.forEach(operation => {
-            enqueue(operation);
-            console.log("Operation:",operation);
-        });
-        console.log(transactions)
-      };
     useEffect(() => {
             if (!sessionStorage.getItem("email")) {
                 window.location.href = "/login";
             } else {
                 getProfile();
-                // wait for the user to be set
-                if (user.email === "") {
-                    console.log("not yet")
-                    return;
-                }
-                else {
-                    console.log("set transactions")
-                    setTransactions();
-                }
             }
     }, []);
 
     return(
         <section className="gray-bg">
             <NavBar />
-            <div className="white-bg" style={{ width: "100%", height: "1000px", marginTop: "0%" }}>
+            <div className="white-bg" style={{ width: "100%", height: "1500px", marginTop: "0%" }}>
 
 
                 <button 
@@ -73,19 +75,15 @@ const Profile = () => {
                     });
                 }}>Sign Out</button>
 
+                <h1 className="text-3xl font-bold px-24 mt-10">Your Transactions</h1>
                 <div>
-                    {/* {transactions.map((operation, index) => {
-                        return(
-                            <div key={index}>
-                                <h1>{operation.date}</h1>
-                                <h1>{operation.ticker}</h1>
-                                <h1>{operation.price}</h1>
-                                <h1>{operation.shares}</h1>
-                                <h1>{operation.type}</h1>
-                            </div>
-                        );
+                    {
+                        user.operations.map((operation, index) => {
+                            return (
+                                <Transaction key={index} data={operation} className="pt-5" />
+                            );
+                        })
                     }
-                    )} */}
                 </div>
             </div>
         </section>

@@ -11,7 +11,7 @@ import Operation from "../../Classes/Operation.js";
 const Buy = () => {
     const { ticker } = useParams();
     const [stock, setStock] = useState({price:0, name:"",ticker:""});
-    const [amount, setAmount] = useState(0);
+    const [amount, setAmount] = useState();
     const [user, setUser] = useState({email:"",username:"",myStocks:[],balance:0,operations:[],invested:0});
     const userCollectionRef = collection(db,"users");
     const [total, setTotal] = useState(0);
@@ -48,11 +48,11 @@ const Buy = () => {
         const newOperation = new Operation(new Date().toLocaleString(), ticker, stock.price, amount, "buy");
         const newStock = {ticker: ticker, price: [stock.price], shares: [amount]};
         if (!hasStock) {
-            console.log("no stock")
+            const op = {date: newOperation.date, ticker: newOperation.ticker, price: newOperation.price, shares: newOperation.shares, type: newOperation.type};
             await updateDoc(doc(db, "users", user.email), {
                 balance: newBalance,
                 invested: newInvested,
-                operations: arrayUnion(newOperation),
+                operations: arrayUnion(op),
                 myStocks: arrayUnion(newStock)
             });
         } else{

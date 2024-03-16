@@ -9,7 +9,7 @@ import Operation from "../../Classes/Operation.js";
 const Sell = () => {
     const { ticker } = useParams();
     const [stock, setStock] = useState({price:0, name:"",ticker:""});
-    const [amount, setAmount] = useState(0);
+    const [amount, setAmount] = useState();
     const [user, setUser] = useState({email:"",username:"",myStocks:[],balance:0,operations:[],invested:0});
     const userCollectionRef = collection(db,"users");
     const [total, setTotal] = useState(0);

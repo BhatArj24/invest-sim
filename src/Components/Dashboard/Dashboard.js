@@ -144,7 +144,7 @@ const Dashboard = () => {
     return (
         <section className="gray-bg">
             <NavBar />
-            <div className="gray-bg" style={{width:"100%",height:"1000px",marginTop:"0%"}}>
+            <div className="gray-bg" style={{width:"100%",height:"1500px",marginTop:"0%"}}>
                 <div className="flex m-auto mt-6 relative w-1/3 h-14 rounded-lg border-2 border-black bg-slate-50">
                     <div className="flex w-full h-full align-middle">
                         <div>
@@ -206,9 +206,9 @@ const Dashboard = () => {
                         <p className={`font-semibold p-1.5 ${selectTime !== "All" ? 'text-white ' : 'text-black '}`}>All</p>
                     </button>
                     <div style={{marginLeft:"800px"}} className="mt-1">
-                        <button className="font-semibold">
+                        <Link className="font-semibold" to={'/buying-power'}>
                             Buying Power: ${user.balance.toFixed(2)}
-                        </button>
+                        </Link>
                     </div>
                 </div>
                 <h1 className="text-3xl font-bold px-40 mt-10">Your Holdings</h1>

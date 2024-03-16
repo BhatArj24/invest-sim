@@ -28,7 +28,7 @@ const Login = () => {
     };
     useEffect(() => {
       if (sessionStorage.getItem("email")) {
-        navigate("/browse");
+        navigate("/dashboard");
       }
     }, []);
     
@@ -74,11 +74,6 @@ const Login = () => {
                             />
                         </div>
                         <div>
-                            <Link to="/forgot-password">
-                                <button className="block font-bold text-sm text-black hover:text-slate-800 underline mb-4" >
-                                    Forgot Password?
-                                </button>
-                            </Link>
                             <Link to="/register">
                                 <button className="block font-bold text-sm text-black hover:text-slate-800 underline mb-4" >
                                     Create an account
