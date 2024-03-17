@@ -241,7 +241,7 @@ const Dashboard = () => {
           </h1>
         )}
 
-        {user.email !== "" ? (
+        {user.myStocks.length !== 0 ? (
             <div>
             <StockGraph
                 stockData={{
@@ -250,7 +250,6 @@ const Dashboard = () => {
                 range: selectTime,
                 }}
             />
-          {/* // add a caption stating which stock is being displayed */}
             <h1 className="text-2xl font-semibold px-40 pt-5">
                 Graph of {user.myStocks[0].ticker}
             </h1>
@@ -260,7 +259,11 @@ const Dashboard = () => {
 
 
         ) : (
-          <div className="w-3/4 m-auto h-96 bg-white"></div>
+          <div className="w-3/4 m-auto h-96 bg-white">
+            <h1 className="text-2xl font-semibold px-40 pt-5">
+              No stocks to display
+            </h1>
+          </div>
         )}
 
         <div className="flex m-auto gap-6 w-3/4 mt-6">

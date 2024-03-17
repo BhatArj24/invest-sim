@@ -5,6 +5,7 @@ import {collection, getDocs, updateDoc, doc, arrayUnion} from "firebase/firestor
 import {db} from "../../firebase-config.js";
 import axios from "axios";
 import Operation from "../../Classes/Operation.js";
+import { useNavigate } from "react-router-dom";
 
 const Sell = () => {
     const { ticker } = useParams();
@@ -14,6 +15,7 @@ const Sell = () => {
     const userCollectionRef = collection(db,"users");
     const [total, setTotal] = useState(0);
     const [totalShares, setTotalShares] = useState(0);
+    const navigate = useNavigate();
     const getProfile = async () =>{
         const email = sessionStorage.getItem("email");
         const data = await getDocs(userCollectionRef);
@@ -86,7 +88,7 @@ const Sell = () => {
             operations: arrayUnion(op),
             myStocks: user.myStocks
         });
-        window.location.href = "/dashboard";
+        navigate("/dashboard");
     }
 
     useEffect(() => {
@@ -143,8 +145,11 @@ const Sell = () => {
 
                         </div>
                         <div className="flex pt-3">
-                            <h1 className="text-xl" >
+                            {/* <h1 className="text-xl" >
                                 Shares Left: <span className={`text-xl ${totalShares - amount < 0 ? 'text-red-500' : ''}`}>{(totalShares - amount).toFixed(2)}</span>
+                            </h1> */}
+                            <h1 className="text-xl" >
+                                Shares Left: <span className={`text-xl ${totalShares - amount < 0 ? 'text-red-500' : ''}`}>{totalShares}</span>
                             </h1>
                         </div>
                     </div>

@@ -44,7 +44,6 @@ const Register = () => {
                 .catch((error) => {
                     console.log(error)
             });
-            console.log("hi");
         }
 	};
     useEffect(() => {
