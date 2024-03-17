@@ -104,7 +104,7 @@ const StockPage = () => {
         <NavBar />
       <div
         className="gray-bg"
-        style={{ width: "100%", height: "1000px", marginTop: "0%" }}
+        style={{ width: "100%", height: "1200px", marginTop: "0%" }}
       >
 
         <h1 className="text-4xl font-bold px-40 mt-10">{stock.name}</h1>

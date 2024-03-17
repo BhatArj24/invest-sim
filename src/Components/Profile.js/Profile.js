@@ -7,6 +7,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase-config.js";
 import useStack from "./Stack.js";
 import Transaction from "./Transaction.js";
+import userPFP from "../../Images/user.png";
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -62,18 +63,18 @@ const Profile = () => {
         <section className="gray-bg">
             <NavBar />
             <div className="white-bg" style={{ width: "100%", height: "1500px", marginTop: "0%" }}>
+                <div className="flex justify-center">
+                    <img src={userPFP} alt="user" style={{ width: "200px", height: "200px", borderRadius: "50%", marginTop: "50px" }} />
+                </div>
+                <h1 className="text-3xl font-bold px-24 mt-10">Welcome, {user.username}</h1>
+                <div className="flex justify-center">
+                    <h1 className="text-2xl font-bold" style={{ marginTop: "50px", paddingRight:"30px" }}>Your Balance:</h1>
+                    <div className="flex justify-center items-center" style={{ width: "100px", height: "100px", borderRadius: "50%", backgroundColor: "green", marginTop: "20px" }}>
+                        <h1 className="text-2xl font-bold" style={{ color: "white" }}>${user.balance}</h1>
+                    </div>
+                </div>
 
 
-                <button 
-                style={{backgroundColor:"red",border:"none",padding:"10px",cursor:"pointer", color:"white"}}
-                onClick={() => {
-                    signOut(auth).then(() => {
-                        sessionStorage.removeItem("email");
-                        navigate("/login");
-                    }).catch((error) => {
-                        console.log(error);
-                    });
-                }}>Sign Out</button>
 
                 <h1 className="text-3xl font-bold px-24 mt-10">Your Transactions</h1>
                 <div>
@@ -85,6 +86,19 @@ const Profile = () => {
                         })
                     }
                 </div>
+
+                <button 
+                style={{backgroundColor:"red",border:"none",padding:"10px",cursor:"pointer", color:"white"}}
+                className="mt-10 ml-24"
+                onClick={() => {
+                    signOut(auth).then(() => {
+                        sessionStorage.removeItem("email");
+                        navigate("/login");
+                    }).catch((error) => {
+                        console.log(error);
+                    });
+                }}>Sign Out</button>
+
             </div>
         </section>
 

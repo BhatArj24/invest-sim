@@ -11,7 +11,7 @@ const Home = () => {
             
             <div
           className="white-bg"
-          style={{ width: "100%", height: "1000px", marginTop: "0%" }}
+          style={{ width: "100%", height: "1200px", marginTop: "0%" }}
         >
           <div className="flex flex-col lg:flex-row">
             <div className="basis-1/2">
