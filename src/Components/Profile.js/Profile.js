@@ -70,7 +70,7 @@ const Profile = () => {
                 <div className="flex justify-center">
                     <h1 className="text-2xl font-bold" style={{ marginTop: "50px", paddingRight:"30px" }}>Your Balance:</h1>
                     <div className="flex justify-center items-center" style={{ width: "100px", height: "100px", borderRadius: "50%", backgroundColor: "green", marginTop: "20px" }}>
-                        <h1 className="text-2xl font-bold" style={{ color: "white" }}>${user.balance}</h1>
+                        <h1 className="text-2xl font-bold" style={{ color: "white" }}>${user.balance.toFixed(2)}</h1>
                     </div>
                 </div>
 
