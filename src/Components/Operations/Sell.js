@@ -93,18 +93,19 @@ const Sell = () => {
 
     useEffect(() => {
         if (!sessionStorage.getItem("email")) {
-            window.location.href = "/login";
+            navigate("/login");
         } else {
             getProfile();
             getStock(ticker);
-            if(user.email !== ""){
-                user.myStocks.forEach((s) => {
-                    if (s.ticker === ticker) {
-                        console.log("");
-                        setTotalShares(totalSharesCalculation(s.shares));
-                    }
-                });
-            }
+            // if(user.email !== ""){
+            //     user.myStocks.forEach((s) => {
+            //         if (s.ticker === ticker) {
+            //             console.log("");
+            //             setTotalShares(totalSharesCalculation(s.shares));
+            //         }
+            //     });
+            // }
+            setTotalShares(sessionStorage.getItem("shares"));
         }
     }, []);
     return (

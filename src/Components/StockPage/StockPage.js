@@ -10,12 +10,13 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Stock from "../../Classes/Stock.js";
 import StockGraph from "./StockGraph.js";
+import { useNavigate } from "react-router-dom";
 
 const StockPage = () => {
   const { ticker } = useParams();
   const [user, setUser] = useState({email:"",username:"",myStocks:[],balance:0,operations:[],invested:0});
   const userCollectionRef = collection(db,"users");
-
+  const navigate = useNavigate();
   const [stock, setStock] = useState(new Stock("", "", 0.0, 0.0, 0.0));
   const [selectTime, setSelectTime] = useState("1d");
   const getProfile = async () =>{
@@ -37,7 +38,7 @@ const StockPage = () => {
 
   useEffect(() => {
     if (!sessionStorage.getItem("email")) {
-        window.location.href = "/login";
+        navigate("/login");
     } else {
         getProfile();
         getStock(ticker);
@@ -280,6 +281,7 @@ const StockPage = () => {
             <Link to={`/buy/${stock.ticker}`}>
                 <button
                     className="block bg-black hover:bg-slate-700 text-white font-bold py-3 px-12 focus:outline-none focus:shadow-outline rounded-full"
+                    
                 >
                     Buy
                 </button>
@@ -287,6 +289,9 @@ const StockPage = () => {
             <Link to={`/sell/${stock.ticker}`}>
                 <button
                     className="block bg-black hover:bg-slate-700 text-white font-bold py-3 px-12 focus:outline-none focus:shadow-outline rounded-full"
+                    onClick={() => {
+                      sessionStorage.setItem("shares",totalSharesCalculation(user.myStocks));
+                  }}
                 >
                     Sell
                 </button>

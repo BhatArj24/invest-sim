@@ -53,7 +53,7 @@ const Profile = () => {
     }
     useEffect(() => {
             if (!sessionStorage.getItem("email")) {
-                window.location.href = "/login";
+                navigate("/login");
             } else {
                 getProfile();
             }

@@ -5,11 +5,12 @@ import {collection, getDocs, updateDoc, doc, arrayUnion} from "firebase/firestor
 import {db} from "../../firebase-config.js";
 import axios from "axios";
 import Operation from "../../Classes/Operation.js";
-
+import { useNavigate } from "react-router-dom";
 
 
 const Buy = () => {
     const { ticker } = useParams();
+    const navigate = useNavigate();
     const [stock, setStock] = useState({price:0, name:"",ticker:""});
     const [amount, setAmount] = useState();
     const [user, setUser] = useState({email:"",username:"",myStocks:[],balance:0,operations:[],invested:0});
@@ -73,7 +74,7 @@ const Buy = () => {
                 myStocks: user.myStocks
             });
         }
-        window.location.href = "/dashboard";
+        navigate('/dashboard');
     }
     const getStock = async (ticker) => {
         const options = {
@@ -95,7 +96,7 @@ const Buy = () => {
 
     useEffect(() => {
         if (!sessionStorage.getItem("email")) {
-            window.location.href = "/login";
+            navigate("/login");
         } else {
             getProfile();
             getStock(ticker);
