@@ -25,7 +25,6 @@ function App() {
             <Route path='/buy/:ticker' element={<Buy/>} />
             <Route path='/sell/:ticker' element={<Sell/>} />
             <Route path='/buying-power' element={<BuyingPower/>} />
-
           </Routes>
         </div>
       </Router>
